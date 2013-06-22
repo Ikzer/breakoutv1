@@ -10,4 +10,11 @@ var h = $("#canvas").height();
  ctx.strokeStyle = "black";
  ctx.strokeRect(0, 0, w, h);
  
+//Dibujar un círculo
+ ctx.beginPath();
+ ctx.arc(75, 75, 10, 0, Math.PI*2, true);
+ ctx.fillStyle = "black";
+ ctx.closePath();
+ ctx.fill();
+ 
  
