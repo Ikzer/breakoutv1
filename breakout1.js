@@ -52,6 +52,12 @@ function paint() {
 clear();
 circle(x, y, 10);
 
+//Detección de colisiones con los bordes
+if (x + dx > WIDTH || x + dx < 0)
+	dx = -dx;
+	if (y + dy > HEIGHT || y + dy < 0)
+	dy = -dy;
+
 x += dx;
 y += dy;
 }
