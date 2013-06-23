@@ -5,7 +5,18 @@ var dx = 2; // Velocidad en X
 var dy = 4; // Velocidad en Y
 var WIDTH; // Ancho del frame
 var HEIGHT; // Alto del frame
-var ctx;
+var ctx; // Referencia al canvas
+var paddlex; // Punto central de la barra
+var paddleh; // Altura de la barra
+var paddlew; // Ancho de la barra
+
+// Inicializar la barra
+
+function init_paddle() {
+paddlex = WIDTH / 2;
+paddleh = 10;
+paddlew = 75;
+}
 
 // Inicializar todo
 
@@ -51,15 +62,27 @@ function clear() {
 function paint() {
 clear();
 circle(x, y, 10);
+//Dibujar la barra
+rect(paddlex, HEIGHT-paddleh, paddlew, paddleh);
 
 //Detección de colisiones con los bordes
 if (x + dx > WIDTH || x + dx < 0)
 	dx = -dx;
-	if (y + dy > HEIGHT || y + dy < 0)
+
+if (y + dy < 0)
 	dy = -dy;
+else if (y + dy > HEIGHT) {
+	if (x > paddlex && x < paddlex + paddlew)
+	// Si cae dentro de la barra, cambiamos la dirección 
+	dy = -dy;
+	else
+	// Fuera de la barra, paramos la animación
+	clearInterval(intervalId);
+	}
 
 x += dx;
 y += dy;
 }
 
 init();
+init_paddle();
