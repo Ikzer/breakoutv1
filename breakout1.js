@@ -1,6 +1,6 @@
 //Variables globales
 var x = 150; // Posición inicial en X
-var y = 150; // Posición inicial en Y
+var y = 250; // Posición inicial en Y
 var dx = 2; // Velocidad en X
 var dy = 4; // Velocidad en Y
 var WIDTH; // Ancho del frame
@@ -14,6 +14,12 @@ var leftDown = false; // Tecla Izquierda
 var intervalId = 0; // Identificador del intervalo de actualización
 var canvasMinX; // Posición izquierda del canvas
 var canvasMaxX; // Posición derecha del canvas
+var bricks; // El array de bloques
+var NROWS = 5; // Número de filas
+var NCOLS = 5; // Número de columnas
+var BRICKWIDTH; // Ancho de los bloques
+var BRICKHEIGHT = 15; // Altura de los bloques
+var PADDING = 1; // Separación entre bloques
 
 //Inicializar todo
 
@@ -22,6 +28,7 @@ function init() {
 	WIDTH = $("#canvas").width(); // Asignar su tamaño a las variables 
 	HEIGHT = $("#canvas").height();
 	paddlex = WIDTH / 2;
+	BRICKWIDTH = (WIDTH/NCOLS) - 1;
 	canvasMinX = $("#canvas").offset().left;
 	canvasMaxX = canvasMinX + WIDTH;
 	intervalId = setInterval(paint, 10); // Llamar a paint() cada 10ms
@@ -95,7 +102,8 @@ function paint() {
 	else if (leftDown) paddlex -= 5;
 //	Dibujar la barra
 	rect(paddlex, HEIGHT-paddleh, paddlew, paddleh);
-
+//	Dibujar los bloques	
+	paintbricks();
 //	Detección de colisiones con los bordes
 	if (x + dx > WIDTH || x + dx < 0)
 		dx = -dx;
@@ -115,5 +123,31 @@ function paint() {
 	y += dy;
 }
 
+// Rellenar el array de bloques
+// 1 = Mostrar bloque
+// 2 = Bloque golpeado, no mostrar
+function initbricks() {
+    bricks = new Array(NROWS);
+    for (i=0; i < NROWS; i++) {
+        bricks[i] = new Array(NCOLS);
+        for (j=0; j < NCOLS; j++) {
+            bricks[i][j] = 1;
+        }
+    }
+}
+
+// Pintar los bloques
+// Saltar el espacio si el valor del bloque es 0
+function paintbricks() {
+	for (i=0; i < NROWS; i++) {
+		for (j=0; j < NCOLS; j++) {
+			if (bricks[i][j] == 1) {
+				rect((j * (BRICKWIDTH + PADDING)) + PADDING, 
+						(i * (BRICKHEIGHT + PADDING)) + PADDING,
+						BRICKWIDTH, BRICKHEIGHT);
+			}
+		}
+	}
+}
 init();
-init_paddle();
+initbricks();
