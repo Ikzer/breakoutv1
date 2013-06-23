@@ -104,6 +104,18 @@ function paint() {
 	rect(paddlex, HEIGHT-paddleh, paddlew, paddleh);
 //	Dibujar los bloques	
 	paintbricks();
+
+	// Verificar si le damos a un bloque
+	rowheight = BRICKHEIGHT + PADDING; // Altura de una fila
+	colwidth = BRICKWIDTH + PADDING; // Ancho de una columna
+	row = Math.floor(y/rowheight); // Fila en la que se encuentra la bola
+	col = Math.floor(x/colwidth); // Columna en la que se encuentra la bola
+	// Si coincide, rebotar la bola y marcar el bloque como golpeado
+	if (y < NROWS * rowheight && row >= 0 && col >= 0 && bricks[row][col] == 1) {
+		dy = -dy;
+		bricks[row][col] = 0;
+	}
+
 //	Detección de colisiones con los bordes
 	if (x + dx > WIDTH || x + dx < 0)
 		dx = -dx;
