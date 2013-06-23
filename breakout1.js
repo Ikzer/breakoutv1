@@ -7,16 +7,11 @@ var WIDTH; // Ancho del frame
 var HEIGHT; // Alto del frame
 var ctx; // Referencia al canvas
 var paddlex; // Punto central de la barra
-var paddleh; // Altura de la barra
-var paddlew; // Ancho de la barra
-
-// Inicializar la barra
-
-function init_paddle() {
-paddlex = WIDTH / 2;
-paddleh = 10;
-paddlew = 75;
-}
+var paddleh = 10; // Altura de la barra
+var paddlew = 75; // Ancho de la barra
+var rightDown = false; // Tecla Derecha
+var leftDown = false; // Tecla Izquierda
+var intervalId = 0; // Identificador del intervalo de actualización
 
 // Inicializar todo
 
@@ -24,8 +19,27 @@ function init() {
 ctx = $('#canvas')[0].getContext("2d"); // Obtener el canvas
 WIDTH = $("#canvas").width(); // Asignar su tamaño a las variables 
 HEIGHT = $("#canvas").height();
-return setInterval(paint, 10); // Llamar a paint() cada 10ms
+paddlex = WIDTH / 2;
+intervalId = setInterval(paint, 10); // Llamar a paint() cada 10ms
 }
+
+//Activar leftDown o rightDown si las teclas izquierda o derecha están pulsadas
+function onKeyDown(evt) {
+if (evt.keyCode == 39) rightDown = true;
+else if (evt.keyCode == 37) leftDown = true;
+}
+
+// Y desactivarlas cuando dejan de estar pulsadas
+function onKeyUp(evt) {
+if (evt.keyCode == 39) rightDown = false;
+else if (evt.keyCode == 37) leftDown = false;
+}
+
+// Enlazamos estas funciones al evento keydown() de jQuery
+// que las lanzará cuando se pulsen o dejen de hacerlo
+
+$(document).keydown(onKeyDown);
+$(document).keyup(onKeyUp);
 
 // Dibujar un círculo de centro en (x,y) y de radio r
 
@@ -48,7 +62,6 @@ ctx.fill();
 
 // Limpiar el frame
 function clear() {
-
 // Limpiamos el canvas
  ctx.clearRect(0, 0, WIDTH, HEIGHT);
 // Dibujar el canvas
@@ -62,6 +75,10 @@ function clear() {
 function paint() {
 clear();
 circle(x, y, 10);
+
+// Mover la barra si se pulsa izquierda o derecha
+if (rightDown) paddlex += 5;
+else if (leftDown) paddlex -= 5;
 //Dibujar la barra
 rect(paddlex, HEIGHT-paddleh, paddlew, paddleh);
 
